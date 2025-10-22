@@ -8,6 +8,7 @@ on:
       - master
 permissions:
   contents: read
+  packages: write
 jobs:
   test:
     name: Test Cases
@@ -23,6 +24,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix['node-version'] }}
+          registry-url: 'https://npm.pkg.github.com'
           cache: 'npm'
           cache-dependency-path: 'package-lock.json'
 
@@ -37,3 +39,7 @@ jobs:
 
       - name: Check Build
         run: npm run dist
+
+      - run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
